@@ -3,7 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import pygame
 
-class MountainRouteEnv():
+class MountainRouteEnv(gym.Env):
 
     metadata = {"render_mode": ["human"], "render_fps": 30}
     def __init__(self, render_mode=None):
