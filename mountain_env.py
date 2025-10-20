@@ -2,6 +2,7 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 import pygame
+import os
 
 class MountainRouteEnv(gym.Env):
 
@@ -29,7 +30,7 @@ class MountainRouteEnv(gym.Env):
         self.state = np.array([0.0,0.0], dtype=np.float32)
         return self.state, {}
     
-    def action(self, action):
+    def step(self, action):
         position, velocity = self.state
 
         if action == 0:
@@ -64,16 +65,35 @@ class MountainRouteEnv(gym.Env):
         if self.screen is None:
             pygame.init()
             self.screen = pygame.display.set_mode((600,200))
+            pygame.display.set_caption("Mountain Route")
             self.clock = pygame.time.Clock()
+
+            # car_path = "car_model.jpg"
+            # self.car_model = None
+            # if os.path.exists(car_path):
+            #     car_img = pygame.image.load(car_path).convert()
+            #     car_img.set_colorkey((255, 255, 255))
+            #     self.car_model = pygame.transform.scale(car_img, (30, 20))
 
         self.screen.fill((135,206,235))
         pygame.draw.rect(self.screen, (34,139,34), (0,150,600,50))
         pygame.draw.line(self.screen, (50,50,50), (50,150), (550,150), 5)
+
         car = int(50 + self.state[0] * 500)
-        pygame.draw.rect(self.screen, (255,0,0), (car-10,130,20,10))
+        pygame.draw.rect(self.screen, (255, 0, 0), (car - 10, 130, 20, 10))
+        
         for obstacle_2 in self.obstacles:
-            obstacle_car = int(50 * obstacle_2 * 500)
-            pygame.draw.circle(self.screen, (80, 80, 80), (obstacle_car, 145), 6)
+            obstacle_x = int(50 + obstacle_2 * 500)
+            obstacle_y = 145
+            pygame.draw.circle(self.screen, (80, 80, 80), (obstacle_x, obstacle_y), 6)
+
+        # car = int(50 + self.state[0] * 500)
+        # if self.car_model:
+        #     rect = self.car_model.get_rect(center=(car, 140))
+        #     self.screen.blit(self.car_model, rect)
+        # else:
+        #     pygame.draw.rect(self.screen, (255, 0, 0), (car - 10, 130, 20, 10))
+
         pygame.display.flip()
         self.clock.tick(self.metadata["render_fps"])
 

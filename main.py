@@ -13,7 +13,7 @@ for episode in range(n_episodes):
 
     while not done:
         action = agent.select_action(state)
-        state, reward, done, _, _ = env.action(action)
+        state, reward, done, _, _ = env.step(action)
         env.render()
         total_reward += reward
 
