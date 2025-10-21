@@ -1,11 +1,14 @@
 from mountain_env import MountainRouteEnv
-from car_agent import RandomAgent
+# from car_agent import RandomAgent
+from car_agent import QlearningAgent
 import matplotlib.pyplot as plt
 
 env = MountainRouteEnv(render_mode=None)
-agent = RandomAgent(env.act_space)
+# agent = RandomAgent(env.act_space)
+agent = QlearningAgent(env.act_space)
 
-n_episodes = 100
+
+n_episodes = 500
 
 episode_rewards = []
 
@@ -16,12 +19,16 @@ for episode in range(n_episodes):
 
     while not done:
         action = agent.select_action(state)
-        state, reward, done, _, _ = env.step(action)
-        env.render()
+        # state, reward, done, _, _ = env.step(action)
+        next_state, reward, done, _, _ = env.step(action)
+        agent.update(state, action, reward, next_state, done)
+        # env.render()
+        state = next_state
         total_reward += reward
         
     episode_rewards.append(total_reward)
-    print(f"Episode {episode+1} reward = {total_reward:.2f}")
+    if (episode + 1) % 25 == 0:
+        print(f"Episode {episode + 1}/{n_episodes} | Reward = {total_reward:.2f} | Epsilon = {agent.epsilon:.3f}")
 
 env.close()
 
