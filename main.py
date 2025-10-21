@@ -2,13 +2,14 @@ from mountain_env import MountainRouteEnv
 # from car_agent import RandomAgent
 from car_agent import QlearningAgent
 import matplotlib.pyplot as plt
+import numpy as np
 
 env = MountainRouteEnv(render_mode=None)
 # agent = RandomAgent(env.act_space)
 agent = QlearningAgent(env.act_space)
 
 
-n_episodes = 500
+n_episodes = 5000
 
 episode_rewards = []
 
@@ -27,13 +28,17 @@ for episode in range(n_episodes):
         total_reward += reward
         
     episode_rewards.append(total_reward)
-    if (episode + 1) % 25 == 0:
+    if (episode + 1) % 100 == 0:
         print(f"Episode {episode + 1}/{n_episodes} | Reward = {total_reward:.2f} | Epsilon = {agent.epsilon:.3f}")
 
 env.close()
 
+window = 50
+smoothed_rewards = np.convolve(episode_rewards, np.ones(window)/window, mode='valid')
+
 plt.figure(figsize=(10,6))
 plt.plot(episode_rewards, marker="o")
+plt.plot(smoothed_rewards, color='red')
 plt.xlabel("Episode")
 plt.ylabel("Reward")
 plt.title("Agent training progress")

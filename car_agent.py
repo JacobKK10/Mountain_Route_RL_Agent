@@ -9,7 +9,7 @@ class RandomAgent:
         return self.action_space.sample()
     
 class QlearningAgent:
-    def __init__(self, action_space, n_bins=20, alpha=0.1, gamma=0.95, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.05):
+    def __init__(self, action_space, n_bins=20, alpha=0.3, gamma=0.99, epsilon=1.0, epsilon_decay=0.999, epsilon_min=0.05):
         self.action_space = action_space
         self.n_bins = n_bins
         self.alpha = alpha

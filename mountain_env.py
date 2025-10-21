@@ -24,9 +24,15 @@ class MountainRouteEnv(gym.Env):
         self.screen = None
         self.clock = None
 
+        self.max_steps = 200
+        self.current_step = 0
+
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         self.state = np.array([0.0,0.0], dtype=np.float32)
+
+        self.current_step = 0
+        
         return self.state, {}
     
     def step(self, action):
@@ -44,18 +50,27 @@ class MountainRouteEnv(gym.Env):
         #penalty to end each episode faster
         reward = -0.01
 
+        reward += (position - 0.5) * 0.2
+
         for obstacle in self.obstacles:
-            if abs(position - obstacle) < 0.02:
-                reward -= 1.0
-                velocity = 0.0
+            if abs(position - obstacle) < 0.03:
+                reward -= 2.0
+                velocity = -0.01
 
         done = False
+        if position > 0.9:
+            reward += 5.0
         if position >= self.end_state:
             #Reward for reaching the end
-            reward += 10.0
+            reward += 50.0
             done = True
 
         self.state = np.array([position, velocity], dtype=np.float32)
+
+        self.current_step += 1
+        if self.current_step >= self.max_steps:
+            done = True
+
         return self.state, reward, done, False, {}
     
     def render(self):
