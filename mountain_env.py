@@ -2,7 +2,6 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 import pygame
-import os
 
 class MountainRouteEnv(gym.Env):
 
@@ -68,13 +67,6 @@ class MountainRouteEnv(gym.Env):
             pygame.display.set_caption("Mountain Route")
             self.clock = pygame.time.Clock()
 
-            # car_path = "car_model.jpg"
-            # self.car_model = None
-            # if os.path.exists(car_path):
-            #     car_img = pygame.image.load(car_path).convert()
-            #     car_img.set_colorkey((255, 255, 255))
-            #     self.car_model = pygame.transform.scale(car_img, (30, 20))
-
         self.screen.fill((135,206,235))
         pygame.draw.rect(self.screen, (34,139,34), (0,150,600,50))
         pygame.draw.line(self.screen, (50,50,50), (50,150), (550,150), 5)
@@ -86,13 +78,6 @@ class MountainRouteEnv(gym.Env):
             obstacle_x = int(50 + obstacle_2 * 500)
             obstacle_y = 145
             pygame.draw.circle(self.screen, (80, 80, 80), (obstacle_x, obstacle_y), 6)
-
-        # car = int(50 + self.state[0] * 500)
-        # if self.car_model:
-        #     rect = self.car_model.get_rect(center=(car, 140))
-        #     self.screen.blit(self.car_model, rect)
-        # else:
-        #     pygame.draw.rect(self.screen, (255, 0, 0), (car - 10, 130, 20, 10))
 
         pygame.display.flip()
         self.clock.tick(self.metadata["render_fps"])
